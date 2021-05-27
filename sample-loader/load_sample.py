@@ -63,9 +63,9 @@ def _load_sample_units(collection_exercise_id: str, sample_file_reader: Iterable
 
 
 def _create_case_json(sample_row, collection_exercise_id) -> str:
-    create_case = {'collectionExerciseId': collection_exercise_id,
-                   'caseId': uuid.uuid4(),
-                   'sampleData': {
+    create_case = {'caseId': str(uuid.uuid4()),
+                   'collectionExerciseId': collection_exercise_id,
+                   'sample': {
                        'uprn': sample_row['UPRN'], 'estabUprn': sample_row['ESTAB_UPRN'],
                        'addressType': sample_row['ADDRESS_TYPE'], 'estabType': sample_row['ESTAB_TYPE'],
                        'addressLevel': sample_row['ADDRESS_LEVEL'], 'abpCode': sample_row['ABP_CODE'],
