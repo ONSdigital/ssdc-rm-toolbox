@@ -2,7 +2,7 @@ import csv
 import json
 from unittest import TestCase
 from unittest.mock import patch
-from load_sample import load_sample
+from sample_loader.load_sample import load_sample
 
 
 @patch('load_sample.RabbitContext')
