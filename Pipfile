@@ -11,8 +11,6 @@ codecov = "*"
 
 [packages]
 pika = "*"
-jinja2 = "*"
-redis = "*"
 google-cloud-storage = "*"
 
 [requires]
