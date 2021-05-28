@@ -66,24 +66,7 @@ def _create_case_json(sample_row, collection_exercise_id) -> str:
     create_case = {
         'caseId': str(uuid.uuid4()),
         'collectionExerciseId': collection_exercise_id,
-        'sample': {
-            'uprn': sample_row['UPRN'], 'estabUprn': sample_row['ESTAB_UPRN'],
-            'addressType': sample_row['ADDRESS_TYPE'], 'estabType': sample_row['ESTAB_TYPE'],
-            'addressLevel': sample_row['ADDRESS_LEVEL'], 'abpCode': sample_row['ABP_CODE'],
-            'organisationName': sample_row['ORGANISATION_NAME'],
-            'addressLine1': sample_row['ADDRESS_LINE1'], 'addressLine2': sample_row['ADDRESS_LINE2'],
-            'addressLine3': sample_row['ADDRESS_LINE3'], 'townName': sample_row['TOWN_NAME'],
-            'postcode': sample_row['POSTCODE'], 'latitude': sample_row['LATITUDE'],
-            'longitude': sample_row['LONGITUDE'], 'oa': sample_row['OA'],
-            'lsoa': sample_row['LSOA'], 'msoa': sample_row['MSOA'],
-            'lad': sample_row['LAD'], 'region': sample_row['REGION'],
-            'htcWillingness': sample_row['HTC_WILLINGNESS'], 'htcDigital': sample_row['HTC_DIGITAL'],
-            'fieldCoordinatorId': sample_row['FIELDCOORDINATOR_ID'],
-            'fieldOfficerId': sample_row['FIELDOFFICER_ID'],
-            'treatmentCode': sample_row['TREATMENT_CODE'],
-            'ceExpectedCapacity': sample_row['CE_EXPECTED_CAPACITY'],
-            'secureEstablishment': sample_row['CE_SECURE'],
-            'printBatch': sample_row['PRINT_BATCH']}
+        'sample': sample_row
     }
 
     return json.dumps(create_case)
