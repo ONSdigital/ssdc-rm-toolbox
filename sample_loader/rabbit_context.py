@@ -1,13 +1,10 @@
 import os
-
 import pika
 from pika.spec import PERSISTENT_DELIVERY_MODE
-
-from exceptions import RabbitConnectionClosedError
+from sample_loader.exceptions import RabbitConnectionClosedError
 
 
 class RabbitContext:
-
     def __init__(self, **kwargs):
         self._host = kwargs.get('host') or os.getenv('RABBITMQ_SERVICE_HOST', 'localhost')
         self._port = kwargs.get('port') or os.getenv('RABBITMQ_SERVICE_PORT', '6672')

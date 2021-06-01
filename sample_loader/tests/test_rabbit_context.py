@@ -1,11 +1,11 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from exceptions import RabbitConnectionClosedError
-from rabbit_context import RabbitContext
+from sample_loader.exceptions import RabbitConnectionClosedError
+from sample_loader.rabbit_context import RabbitContext
 
 
-@patch('rabbit_context.pika')
+@patch('sample_loader.rabbit_context.pika')
 class TestRabbitContext(TestCase):
 
     def test_context_manager_opens_connection_and_channel(self, patch_pika):

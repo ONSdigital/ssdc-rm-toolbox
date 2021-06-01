@@ -2,8 +2,8 @@ import shutil
 from pathlib import Path
 from unittest import TestCase
 
-from generate_sample_file import SampleGenerator
-from validate_sample import SampleValidator
+from sample_loader.generate_sample_file import SampleGenerator
+from sample_loader.validate_sample import SampleValidator
 
 
 class TestValidateSample(TestCase):

@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from download_file_from_bucket import load_bucket_sample_file
+from sample_loader.download_file_from_bucket import load_bucket_sample_file
 
 
 @pytest.fixture
@@ -15,7 +15,7 @@ def create_dir():
     shutil.rmtree("sample_files")
 
 
-@patch('download_file_from_bucket.storage')
+@patch('sample_loader.download_file_from_bucket.storage')
 def test_download_file_from_bucket_happy_path(patched_storage, create_dir):
     # Given
     sample_file = "sample_file.csv"

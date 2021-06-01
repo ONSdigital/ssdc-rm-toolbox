@@ -1,6 +1,6 @@
 import pytest
 
-import validators
+from sample_loader import validators
 
 
 def test_max_length_valid():

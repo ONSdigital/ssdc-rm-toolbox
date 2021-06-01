@@ -2,7 +2,7 @@ import argparse
 import csv
 from collections import namedtuple
 
-from validators import max_length, Invalid, mandatory, numeric, in_set, latitude_longitude, set_equal, \
+from sample_loader.validators import max_length, Invalid, mandatory, numeric, in_set, latitude_longitude, set_equal, \
     no_padding_whitespace, region_matches_treatment_code, ce_u_has_expected_capacity, \
     ce_e_has_expected_capacity, alphanumeric_postcode, no_pipe_character, latitude_longitude_range, \
     alphanumeric_plus_hyphen_field_values

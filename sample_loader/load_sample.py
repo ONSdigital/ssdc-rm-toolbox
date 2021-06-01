@@ -7,7 +7,7 @@ import sys
 import uuid
 from typing import Iterable
 
-from rabbit_context import RabbitContext
+from sample_loader.rabbit_context import RabbitContext
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

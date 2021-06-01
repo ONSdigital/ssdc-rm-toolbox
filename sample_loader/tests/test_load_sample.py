@@ -5,7 +5,7 @@ from unittest.mock import patch
 from sample_loader.load_sample import load_sample
 
 
-@patch('load_sample.RabbitContext')
+@patch('sample_loader.load_sample.RabbitContext')
 class TestLoadSample(TestCase):
 
     def test_load_sample_publishes_case_to_rabbit(self, patch_rabbit):
@@ -20,7 +20,7 @@ class TestLoadSample(TestCase):
             '39 Cranbrook Road,,Windleybury,XX1 0XX,51.4721166,-2.5970579,E00074083,E01014669,E02003031,E06000023,'
             'E12000009,2,4,4,5,HH_LF3R3AE,6,0,1')
 
-        sample_units = load_sample(sample_file, 'test_ce_uuid', 'test_ap_uuid', store_loaded_sample_units=True)
+        sample_units = load_sample(sample_file, 'test_ce_uuid', store_loaded_sample_units=True)
 
         self.assertEquals(len(sample_units), 2)
 
@@ -43,7 +43,7 @@ class TestLoadSample(TestCase):
             '39 Cranbrook Road,,Windleybury,XX1 0XX,51.4721166,-2.5970579,E00074083,E01014669,E02003031,E06000023,'
             'E12000009,2,4,4,5,HH_LF3R3AE,6,0,2')
 
-        sample_units = load_sample(sample_file, 'test_ce_uuid', 'test_ap_uuid', store_loaded_sample_units=False)
+        sample_units = load_sample(sample_file, 'test_ce_uuid', store_loaded_sample_units=False)
 
         self.assertEquals(len(sample_units), 0)
 
@@ -58,5 +58,5 @@ class TestLoadSample(TestCase):
         sample_file_rows = csv.DictReader(sample_file)
         for row_number, sample_row in enumerate(sample_file_rows):
             message_contents = json.loads(publish_message_call_args[row_number][0][0])
-            self.assertEqual(sample_row['UPRN'], message_contents['uprn'])
-            self.assertEqual(sample_row['ADDRESS_LINE1'], message_contents['addressLine1'])
+            self.assertEqual(sample_row['UPRN'], message_contents['sample']['UPRN'])
+            self.assertEqual(sample_row['ADDRESS_LINE1'], message_contents['sample']['ADDRESS_LINE1'])
