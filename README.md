@@ -25,8 +25,8 @@ pipenv shell
 
 ## Building and pushing the docker container
 ```shell script
-docker build -t eu.gcr.io/census-rm-ci/census-rm-sample-loader:<TAG> .
-docker push eu.gcr.io/census-rm-ci/census-rm-sample-loader:<TAG>
+docker build -t eu.gcr.io/census-rm-ci/rm/ssdc-rm-toolbox:<TAG> .
+docker push eu.gcr.io/census-rm-ci/rm/ssdc-rm-toolbox:<TAG>
 ```
 
 ## Testing Locally with Docker
