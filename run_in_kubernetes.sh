@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 if [ -z "$IMAGE" ]; then
-   IMAGE=eu.gcr.io/census-rm-ci/rm/census-rm-sample-loader:latest
+   IMAGE=eu.gcr.io/census-rm-ci/rm/ssdc-rm-toolbox:latest
 fi
 
 echo "Image $IMAGE"
 
-kubectl run sampleloader -it --rm \
+kubectl run toolbox -it --rm \
    --generator=run-pod/v1 \
    --image $IMAGE\
    --env=RABBITMQ_USER=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-username}" | base64 --decode) \

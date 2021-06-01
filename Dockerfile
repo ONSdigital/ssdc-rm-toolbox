@@ -2,8 +2,8 @@ FROM python:3.9-slim
 
 RUN pip install pipenv
 
-RUN groupadd --gid 1000 sampleloader && useradd --create-home --system --uid 1000 --gid sampleloader sampleloader
-WORKDIR /home/sampleloader
+RUN groupadd --gid 1000 toolbox && useradd --create-home --system --uid 1000 --gid toolbox toolbox
+WORKDIR /home/toolbox
 
 ENV RABBITMQ_SERVICE_HOST rabbitmq
 ENV RABBITMQ_SERVICE_PORT 5672
@@ -12,8 +12,8 @@ ENV RABBITMQ_QUEUE case.sample.inbound
 ENV RABBITMQ_USER guest
 ENV RABBITMQ_PASSWORD guest
 
-COPY Pipfile* /home/sampleloader/
+COPY Pipfile* /home/toolbox/
 RUN pipenv install --system --deploy
-USER sampleloader
+USER toolbox
 
-COPY --chown=sampleloader .. /home/sampleloader
+COPY --chown=toolbox .. /home/toolbox
