@@ -1,9 +1,10 @@
 # ssdc-rm-toolbox
 
 # Census sample loader
-This project contains a simplified sample loading script for Response Management case setup. (Currently in use for performance test setup on Kubernetes) It will take as arguments a sample CSV file, a Collection Exercise UUID and an Action Plan UUID.
+This project contains a simplified sample loading script for Response Management case setup. (Currently in use for performance test setup on Kubernetes) It will take as arguments a sample CSV file, a Collection Exercise UUID
 
-The Sample Loader will generate UUIDs for Sample Units and place messages (See example.xml for format) directly onto the Case.CaseDelivery queue. Case service will then create corresponding Cases.
+The Sample Loader will generate UUIDs for Sample Units and place messages directly onto the sample queue.
+ Case service will then create corresponding Cases.
 All of the attributes will be added to the queue as part of the message
   
 
@@ -83,46 +84,4 @@ SAMPLE_BUCKET=<env_name>-sample python download_file_from_bucket.py --sample_fil
 
 This will download the file from the bucket onto the persistent volume which is mounted to the directory: /home/sampleloader/sample_files 
 
-## Sample File Validator
-The is a validation script provided which performs a basic sanity check of the sample file. 
 
-To run the sample validation locally run
-```shell script
-pipenv run python validate_sample.py <sample_file>
-```
-
-See the `SAMPLE_ROW_SCHEMA` in [`validate_sample.py`](/validate_sample.py) for the schema spec.
-
-## Dummy Sample File Generator
-The [`generate_sample_file.py`](/generate_sample_file.py) script generates a dummy sample file of random data designed to have a realistic shape.
-
-Run it with the provided treatment code quantities config:
-```shell script
-pipenv run python generate_sample_file.py
-```
-
-And it will write out the generated file to `sample_file.csv`
-
-To run it with customised config and output path:
-```shell script
-pipenv run python generate_sample_file.py -o /custom/path.csv -t /path/to/treatment_code_quantities.csv
-```
-Where the treatment code quantities file is a csv with headers `"Treatment Code"` and `"Quantity"` specifying the quantities of each treatment code to include in the generated sample
-
-An optional flag `-s` or `--sequential_uprn` can be used to generate unique UPRN's sequentially instead of randomly, making it faster to generate a massive file.
-
-## Sample file redactor
-The [`redact_sample.py`](/redact_sample.py) script takes in a sample file and outputs the same sample with random data for redacted fields
-
-To redact **all** sensitive fields, run it with the script :
-```shell script
-pipenv run python redact_sample.py sample_files/my_sample.csv
-```
-And it will write out the redacted file to `my_sample_redacted.csv`
-
-To redact just the HTC fields, run the script with the flag `--redact-htc-only`:
-```shell script
-pipenv run python redact_sample.py sample_files/my_sample.csv --redact-htc-only
-```
-
-And it will write out the redacted file to `my_sample_htc_redacted_only.csv`
