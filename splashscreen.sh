@@ -13,5 +13,5 @@ echo "╚═╝  ╚═╝╚═╝     ╚═╝       ╚═╝    ╚══�
 echo
 echo Give me commands and I will do thy bidding. With great power comes great responsibility.
 echo
-echo Commands None
+echo Commands: helpme
 echo
