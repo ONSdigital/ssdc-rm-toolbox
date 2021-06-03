@@ -10,15 +10,9 @@ class TestLoadSample(TestCase):
 
     def test_load_sample_publishes_case_to_rabbit(self, patch_rabbit):
         sample_file = (
-            'UPRN,ESTAB_UPRN,ADDRESS_TYPE,ESTAB_TYPE,ADDRESS_LEVEL,ABP_CODE,ORGANISATION_NAME,ADDRESS_LINE1,'
-            'ADDRESS_LINE2,ADDRESS_LINE3,TOWN_NAME,POSTCODE,LATITUDE,LONGITUDE,OA,LSOA,MSOA,LAD,REGION,HTC_WILLINGNESS,'
-            'HTC_DIGITAL,FIELDCOORDINATOR_ID,FIELDOFFICER_ID,TREATMENT_CODE,CE_EXPECTED_CAPACITY,CE_SECURE,PRINT_BATCH',
-            '10008677190,10008677191,HH,Household,U,RD06,,Flat 56 Francombe House,'
-            'Commercial Road,,Windleybury,XX1 0XX,51.4463421,-2.5924477,E00073438,E01014540,E02003043,E06000023,'
-            'E12000009,1,5,1,2,HH_LF3R2E,3,0,2',
-            '10008677193,10008677192,10008677190,HH,Household,U,RD06,,First And Second Floor Flat,'
-            '39 Cranbrook Road,,Windleybury,XX1 0XX,51.4721166,-2.5970579,E00074083,E01014669,E02003031,E06000023,'
-            'E12000009,2,4,4,5,HH_LF3R3AE,6,0,1')
+            'UPRN,ESTAB_UPRN,ADDRESS_LINE1,TOWN_NAME,POSTCODE',
+            '10008677190,10008677191,Flat 56 Francombe House,Windleybury,XX1 0XX',
+            '10008677191,10008677192,Flat 57 Francombe House,Windleybury,XX1 0XX')
 
         sample_units = load_sample(sample_file, 'test_ce_uuid', store_loaded_sample_units=True)
 
@@ -33,15 +27,9 @@ class TestLoadSample(TestCase):
 
     def test_load_sample_no_return_of_sample_units(self, patch_rabbit):
         sample_file = (
-            'UPRN,ESTAB_UPRN,ADDRESS_TYPE,ESTAB_TYPE,ADDRESS_LEVEL,ABP_CODE,ORGANISATION_NAME,ADDRESS_LINE1,'
-            'ADDRESS_LINE2,ADDRESS_LINE3,TOWN_NAME,POSTCODE,LATITUDE,LONGITUDE,OA,LSOA,MSOA,LAD,REGION,HTC_WILLINGNESS,'
-            'HTC_DIGITAL,FIELDCOORDINATOR_ID,FIELDOFFICER_ID,TREATMENT_CODE,CE_EXPECTED_CAPACITY,CE_SECURE,PRINT_BATCH',
-            '10008677190,10008677194,10008677190,HH,Household,U,RD06,,Flat 56 Francombe House,'
-            'Commercial Road,,Windleybury,XX1 0XX,51.4463421,-2.5924477,E00073438,E01014540,E02003043,E06000023,'
-            'E12000009,1,5,1,2,HH_LF3R2E,3,0,2',
-            '10008677192,10008677195,10008677190,HH,Household,U,RD06,,First And Second Floor Flat,'
-            '39 Cranbrook Road,,Windleybury,XX1 0XX,51.4721166,-2.5970579,E00074083,E01014669,E02003031,E06000023,'
-            'E12000009,2,4,4,5,HH_LF3R3AE,6,0,2')
+            'UPRN,ESTAB_UPRN,ADDRESS_LINE1,TOWN_NAME,POSTCODE',
+            '10008677190,10008677191,Flat 56 Francombe House,Windleybury,XX1 0XX',
+            '10008677191,10008677192,Flat 57 Francombe House,Windleybury,XX1 0XX')
 
         sample_units = load_sample(sample_file, 'test_ce_uuid', store_loaded_sample_units=False)
 
