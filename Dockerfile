@@ -19,4 +19,4 @@ COPY Pipfile* /home/toolbox/
 RUN pipenv install --system --deploy
 USER toolbox
 
-COPY --chown=toolbox .. /home/toolbox
+COPY --chown=toolbox . /home/toolbox
