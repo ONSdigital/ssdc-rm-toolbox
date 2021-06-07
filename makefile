@@ -10,4 +10,4 @@ test: lint
 	pipenv run pytest --cov-report term-missing --cov . --capture no
 
 docker: test
-	docker build -t eu.gcr.io/ssdc-rm-ci/ssdc-rm-toolbox .
+	docker build -t eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-toolbox .
