@@ -25,4 +25,4 @@ env:
 
 branches:
   only:
-    - master
+    - main
