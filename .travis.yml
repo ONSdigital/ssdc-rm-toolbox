@@ -1,0 +1,32 @@
+sudo: required
+
+services:
+  - docker
+
+language: python
+
+dist: xenial
+python:
+  - "3.9"
+
+before_install:
+  - python -m pip install --upgrade pip
+  - python -m pip install --upgrade py
+
+install:
+  - pip install pipenv
+  - pipenv install --dev --deploy
+
+script:
+  - make docker
+
+after_success:
+  - pipenv run codecov
+
+env:
+  global:
+    - PIPENV_IGNORE_VIRTUALENVS=1
+
+branches:
+  only:
+    - main

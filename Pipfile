@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+name = "pypi"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+flake8 = "*"
+pytest-cov = "*"
+codecov = "*"
+
+[packages]
+pika = "*"
+google-cloud-storage = "*"
+
+[requires]
+python_version = "3.9"
