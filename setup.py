@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     name="ssdc-rm-toolbox",
-    version="",
+    version="1.0.0",
     description="Scripts to load samples",
     long_description=Path('README.md').read_text(),
     long_description_content_type="text/markdown",
