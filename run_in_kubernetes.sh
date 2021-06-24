@@ -13,7 +13,7 @@ kubectl run toolbox -it --rm \
    --env=RABBITMQ_PASSWORD=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-password}" | base64 --decode) \
    --env=RABBITMQ_SERVICE_HOST=rm-rabbitmq \
    --env=RABBITMQ_SERVICE_PORT=5672 \
-   --env=RABBITMQ_QUEUE='SampleLoader.Case.Sample' \
+   --env=RABBITMQ_QUEUE='supportTool.caseProcessor.sample' \
    --env=RABBITMQ_VHOST='/' \
    --env=RABBITMQ_EXCHANGE='' \
    -- /bin/bash
