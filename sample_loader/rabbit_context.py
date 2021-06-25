@@ -12,7 +12,7 @@ class RabbitContext:
         self._exchange = kwargs.get('exchange') or os.getenv('RABBITMQ_EXCHANGE', '')
         self._user = kwargs.get('user') or os.getenv('RABBITMQ_USER', 'guest')
         self._password = kwargs.get('password') or os.getenv('RABBITMQ_PASSWORD', 'guest')
-        self.queue_name = kwargs.get('queue_name') or os.getenv('RABBITMQ_QUEUE', 'SampleLoader.Case.Sample')
+        self.queue_name = kwargs.get('queue_name') or os.getenv('RABBITMQ_QUEUE', 'supportTool.caseProcessor.sample')
 
     def __enter__(self):
         self.open_connection()
