@@ -1,7 +1,7 @@
 source /home/toolbox/aliases.sh
 /home/toolbox/splashscreen.sh
 
-if [[ $PROJECT_NAME == "??" ]]; then
+if [[ $PROJECT_NAME == "ssdc-rm-prod" ]]; then
     /home/toolbox/splashscreen_prod.sh
     PS1="PRODUCTION️💀️> "
 else

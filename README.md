@@ -1,87 +1,113 @@
-# ssdc-rm-toolbox
+# SSDC RM Toolbox
 
-# Census sample loader
-This project contains a simplified sample loading script for Response Management case setup. (Currently in use for performance test setup on Kubernetes) It will take as arguments a sample CSV file, a Collection Exercise UUID
+The most bestestest tools for make running the social survey big success wow.
 
-The Sample Loader will generate UUIDs for Sample Units and place messages directly onto the sample queue.
- Case service will then create corresponding Cases.
-All of the attributes will be added to the queue as part of the message
-  
+## How to use - Find and remove messages on pubsub
 
-## Setting up the python environment
-This project uses pyenv and pipenv for python version and dependency management, install with
-```shell script
-brew install pyenv pipenv
+This tool will allow you to be able to find and delete messages on a pubsub topic
+### Arguments
+
+| Name                      | Description                                                                                                         |                                                                                        
+| ---------------------     | ------------------------------------------------------------------------------------------------------------------- |
+| `subscription name`       | Pubsub subscription name to look on                                                                                 |
+| `subscription project id` | GCP project name                                                                                                    |
+| `-s --search`             | Search for a string inside of the pubsub message body                                                               |                                                  
+| `DELETE`                  | Used with `message_id`, deletes pubsub message of the id supplied                                                   |
+| `message_id`              | Message id of the pubsub message                                                                                    |
+
+
+
+View messages on pubsub subscription:
+   ```bash
+   python -m toolbox.message_tools.get_pubsub_messages <subscription name> <subscription project id>
+   ```
+   
+View messages on a pubsub subscription with bigger limit:
+   ```bash
+   python -m toolbox.message_tools.get_pubsub_messages <subscription name> <subscription project id> -l <limit>
+   ```
+   
+Search for a message:
+   ```bash
+   python -m toolbox.message_tools.get_pubsub_messages <subscription name> <subscription project id> -s <search term>
+   ```
+
+Delete message on pubsub subscription:   
+   ```bash
+   python -m toolbox.message_tools.get_pubsub_messages <subscription name> <subscription project id> <message_id> DELETE
+   ```
+   
+   
+## How to use - Moving messages from pubsub to bucket
+Move messages from pubsub to a GCS bucket
+### Arguments
+
+| Name                      | Description                                                                                                         |                                                                                        
+| ---------------------     | ------------------------------------------------------------------------------------------------------------------- |
+| `subscription name`       | Subscription name to look on                                                                                        |
+| `subscription project id` | GCP project name                                                                                                    |
+| `bucket name`             | Bucket you want to move the pubsub message to                                                                       |                                                  
+| `message_id`              | Message id of the pubsub message you want to move                                                                   |
+
+
+
+Moving a pubsub message to a bucket:
+```bash
+python -m toolbox.message_tools.put_message_on_bucket <subscription name> <subscription project id> <bucket name> <message_id>
+```
+## How to use - publishing message from GCS bucket to pubsub topic
+
+Publishing message from GCS bucket to pubsub topic
+### Arguments
+
+| Name                      | Description                                                                                                         |                                                                                        
+| ---------------------     | ------------------------------------------------------------------------------------------------------------------- |
+| `topic name`              | topic name to put message on                                                                                               |
+| `project id`              | GCP project name                                                                                                    |
+| `bucket name`             | Bucket you want to move the pubsub message to                                                                       |                                                  
+| `bucket blob name`        | Name of the blob you want to publish to a topic                                                                     |                                                  
+
+Publishing message from GCS bucket to pubsub topic:
+```bash
+python -m toolbox.message_tools.publish_message_from_bucket <topic name> <project id> <bucket blob name> <bucket name>
 ```
 
-Install dependencies with
-```shell script
-make build
-```
+## QID Checksum Validator
+A tool to check if a QID checksum is valid. Also shows the valid checksum digits if the QID fails. 
 
-Enter the environment shell with
-```shell script
-pipenv shell
-```
-
-## Building and pushing the docker container
-```shell script
-docker build -t eu.gcr.io/census-rm-ci/rm/ssdc-rm-toolbox:<TAG> .
-docker push eu.gcr.io/census-rm-ci/rm/ssdc-rm-toolbox:<TAG>
-```
-
-## Testing Locally with Docker
-To test the script locally you must run a RabbitMQ container. A docker-compose.yml file exists for this purpose.
-
-```shell script
-docker-compose up -d
-```
-
-Once RabbitMQ is running you can run the sample loader.
-
-
-## Sample Loader
 ### Usage
-```shell script
-pipenv run python -m sample_loader.load_sample sample_loader/sample_file.csv 39616e56-40f6-4361-952a-cdf5bf193b94
+```bash
+qidcheck <QID>
 ```
 
-### Logging
-You can set the global log level with the `LOG_LEVEL` environment variable, when the sample loader runs as a script it defaults to `INFO` logging from script itself and `ERROR` for other log sources (e.g. pika).
+### Arguments
+| Name                      | Description                                                                                                         |                                                                                        
+| ---------------------     | ------------------------------------------------------------------------------------------------------------------- |
+| `qid`                     | The QID you wish to validate                                                                                        |
 
+#### Optional Arguments
+A non-default modulus and or factor for the checksum algorithm can be used with the optional flags `--modulus` and `--factor` 
+   
+## SFTP Support Login
+To connect to SFTP (i.e. GoAnywhere) to check print files (read only). 
 
-### Viewing messages in the Rabbit queue
-The Rabbit docker image included in docker-compose.yml has the management plugin enabled. This can be accessed when runnning on http://localhost:15672 use guest:guest as the credentials.
-
-
-### Running in Kubernetes
-To run the load_sample app in Kubernetes 
-
-```shell script
-./run_in_kubernetes.sh
+### Usage
+```bash
+doftp
 ```
 
-You can also run it with a specific image rather than the default with
-```shell script
-IMAGE=fullimagelocation ./run_in_kubernetes.sh
+## Uploading a file to a bucket
+To upload a file to a bucket.
+
+### Usage
+```bash
+uploadfiletobucket <file> <project> <bucket>
 ```
 
-This will deploy a sample loader pod in the context your kubectl is currently set to and attach to the shell, allowing you to run the sample loader within the cluster. The pod is deleted when the shell is exited.
+## Running in Kubernetes
+To run the toolbox in a kubernetes environment, you'll have to create the deployment using the YAML files in ssdc-rm-kubernetes. If you do not have a Cloud SQL Read Replica, use the dev deployment YAML file
 
-### Copying across a sample file
-To get a sample file into a pod in kubernetes you can use the `kubectl cp` command
-
-While the sample loader pod is running, from another shell run
-```shell script
-kubectl cp <path_to_sample_file> <namespace>/<sample_load_pod_name>:<destination_path_on_pod>
+Once the pod is up, you can connect to it:
+```bash
+kubectl exec -it $(kubectl get pods --selector=app=ssdc-rm-toolbox -o jsonpath='{.items[*].metadata.name}') -- /bin/bash
 ```
-
-### Downloading a sample file from bucket
-Given a file is in the sample bucket, shell into the sample pod, then run command
-```shell script
-SAMPLE_BUCKET=<env_name>-sample python download_file_from_bucket.py --sample_file <name_of_file_in_bucket.csv>
-```
-
-This will download the file from the bucket onto the persistent volume which is mounted to the directory: /home/sampleloader/sample_files 
-
-
