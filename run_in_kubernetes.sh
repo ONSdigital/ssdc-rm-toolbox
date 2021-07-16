@@ -11,7 +11,7 @@ kubectl run toolbox -it --rm \
    --image $IMAGE\
    --env=RABBITMQ_USER=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-username}" | base64 --decode) \
    --env=RABBITMQ_PASSWORD=$(kubectl get secret rabbitmq -o=jsonpath="{.data.rabbitmq-password}" | base64 --decode) \
-   --env=RABBITMQ_SERVICE_HOST=rabbitmq \
+   --env=RABBITMQ_SERVICE_HOST=rm-rabbitmq \
    --env=RABBITMQ_SERVICE_PORT=5672 \
    --env=RABBITMQ_HTTP_PORT=15672 \
    --env=RABBITMQ_VHOST='/' \
