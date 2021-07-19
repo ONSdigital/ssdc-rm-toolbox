@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ -z "$IMAGE" ]; then
-   IMAGE=eu.gcr.io/ssdc-rm-ci/ssdc-rm-toolbox:latest
+   IMAGE=eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-toolbox:latest
 fi
 
 echo "Image $IMAGE"
