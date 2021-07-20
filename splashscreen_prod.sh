@@ -19,5 +19,5 @@ tput sgr0
 echo
 echo Give me commands and I will do thy bidding. With great power comes great responsibility.
 echo
-echo Commands: helpme
+echo Commands: helpme, msgwizard, vi, curl, dosql [username], sftp, dumpfilestoqueue, dumpqueuetofiles, qidcheck [qid]
 echo
