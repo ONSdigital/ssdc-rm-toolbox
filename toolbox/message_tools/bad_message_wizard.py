@@ -184,15 +184,15 @@ def reset_bad_message_cache():
         print('')
 
 
-def get_queue_names_and_counts(bad_messages):
-    queue_name_dict = {}
+def get_subscription_names_and_counts(bad_messages):
+    subscription_name_dict = {}
     for bad_message in bad_messages:
-        for queue in bad_message['affectedQueues']:
-            if queue not in queue_name_dict:
-                queue_name_dict[queue] = 1
+        for subscription in bad_message['affectedSubscriptions']:
+            if subscription not in subscription_name_dict:
+                subscription_name_dict[subscription] = 1
             else:
-                queue_name_dict[queue] += 1
-    return queue_name_dict
+                subscription_name_dict[subscription] += 1
+    return subscription_name_dict
 
 
 def filter_bad_messages():
@@ -254,10 +254,10 @@ def show_bad_message_list():
 
 def get_bad_message_summaries(all_message_summaries):
     bad_message_summaries = [summary for summary in all_message_summaries if not summary['quarantined']]
-    return remove_milliseconds_from_firstseen(bad_message_summaries)
+    return remove_milliseconds_from_first_seen(bad_message_summaries)
 
 
-def remove_milliseconds_from_firstseen(bad_message_summaries):
+def remove_milliseconds_from_first_seen(bad_message_summaries):
     for msg in bad_message_summaries:
         msg['firstSeen'] = rfc3339.parse_datetime(msg['firstSeen']).strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -268,7 +268,7 @@ def sort_bad_messages(bad_message_summaries):
     print(colored('Actions:', 'cyan', attrs=['underline']))
     print(colored('  1.', 'cyan'), 'View Bad Messages By First Seen')
     print(colored('  2.', 'cyan'), 'View Bad Messages By Last Seen')
-    print(colored('  3.', 'cyan'), 'View Bad Messages Grouped By Queue')
+    print(colored('  3.', 'cyan'), 'View Bad Messages Grouped By Subscription')
     print('')
 
     raw_selection = input(colored('Choose an action: ', 'cyan'))
@@ -278,7 +278,7 @@ def sort_bad_messages(bad_message_summaries):
     if valid_selection == 2:
         group_by = 'lastSeen'
     elif valid_selection == 3:
-        bad_message_summaries = group_messages_by_queue(bad_message_summaries)
+        bad_message_summaries = group_messages_by_subscription(bad_message_summaries)
 
     if not bad_message_summaries:
         return
@@ -287,42 +287,42 @@ def sort_bad_messages(bad_message_summaries):
     return bad_message_summaries
 
 
-def group_messages_by_queue(bad_message_summaries):
-    bad_message_queue_counts = get_queue_names_and_counts(bad_message_summaries)
-    column_widths = get_group_by_queue_widths(bad_message_queue_counts)
+def group_messages_by_subscription(bad_message_summaries):
+    bad_message_subscription_counts = get_subscription_names_and_counts(bad_message_summaries)
+    column_widths = get_group_by_subscription_widths(bad_message_subscription_counts)
 
-    header = get_group_by_queue_headers(column_widths)
+    header = get_group_by_subscription_headers(column_widths)
     print('')
     print(header)
-    print(f'   ---|{"-" * (column_widths["queueName"] + 2)}'
+    print(f'   ---|{"-" * (column_widths["subscriptionName"] + 2)}'
           f'|{"-" * (column_widths["messageCount"] + 2)}')
 
-    for i, (queue, q_count) in enumerate(bad_message_queue_counts.items(), 1):
+    for i, (subscription, q_count) in enumerate(bad_message_subscription_counts.items(), 1):
         print(f'   {colored((str(i) + ".").ljust(3), color="cyan")}'
-              f'| {queue} {" " * (column_widths["queueName"] - len(queue))}'
+              f'| {subscription} {" " * (column_widths["subscriptionName"] - len(subscription))}'
               f'| {q_count} ')
 
-    queue_num = input('Select a queue by number: ')
-    queue_num = validate_integer_input_range(queue_num, 1, len(bad_message_queue_counts))
+    subscription_num = input('Select a subscription by number: ')
+    subscription_num = validate_integer_input_range(subscription_num, 1, len(bad_message_subscription_counts))
 
-    if not queue_num:
+    if not subscription_num:
         return
 
-    selected_queue = list(bad_message_queue_counts.keys())[queue_num - 1]
+    selected_subscription = list(bad_message_subscription_counts.keys())[subscription_num - 1]
     bad_message_summaries = [summary for summary in bad_message_summaries if
-                             selected_queue in summary['affectedQueues']]
+                             selected_subscription in summary['affectedSubscriptions']]
     return bad_message_summaries
 
 
-def get_group_by_queue_headers(column_widths):
-    header = (f'      | {colored("Queue Name".ljust(column_widths["queueName"]), color="cyan")} '
+def get_group_by_subscription_headers(column_widths):
+    header = (f'      | {colored("Subscription Name".ljust(column_widths["subscriptionName"]), color="cyan")} '
               f'| {colored("Message Count".ljust(column_widths["messageCount"]), color="cyan")} ')
     return header
 
 
-def get_group_by_queue_widths(bad_message_queue_counts):
+def get_group_by_subscription_widths(bad_message_subscription_counts):
     column_widths = {
-        'queueName': max(len(queue_name) for queue_name in bad_message_queue_counts.keys()),
+        'subscriptionName': max(len(subscription_name) for subscription_name in bad_message_subscription_counts.keys()),
         'messageCount': len(' Message Count '),
     }
 
@@ -408,7 +408,7 @@ def pretty_print_bad_message_summaries(bad_message_summaries, start_index):
     print(f'     ---|{"-" * (column_widths["messageHash"] + 2)}'
           f'{"-" * (column_widths["exceptionMessage"] + 2)}-'
           f'|{"-" * (column_widths["firstSeen"] + 2)}'
-          f'|{"-" * (column_widths["queues"] + 1)}')
+          f'|{"-" * (column_widths["subscriptions"] + 1)}')
 
     for index, summary in enumerate(bad_message_summaries, start_index + 1):
         index_adjust = 7 - len(str(index))
@@ -420,11 +420,11 @@ def pretty_print_bad_message_summaries(bad_message_summaries, start_index):
                       f'| {summary["firstSeen"]} '
 
         indent_len = len(output_text) - COLOUR_FORMATTING_LEN
-        output_text += f'| {summary["affectedQueues"][0]}'
+        output_text += f'| {summary["affectedSubscriptions"][0]}'
         print(output_text)
 
-        for queue_name in summary["affectedQueues"][1:len(summary["affectedQueues"])]:
-            print(f'{" " * (indent_len)} {queue_name}')
+        for subscription_name in summary["affectedSubscriptions"][1:len(summary["affectedSubscriptions"])]:
+            print(f'{" " * (indent_len)} {subscription_name}')
 
 
 def enrich_summaries_with_exception_msg(bad_message_summaries):
@@ -444,18 +444,18 @@ def enrich_summaries_with_exception_msg(bad_message_summaries):
 
 
 def get_msg_column_widths(bad_message_summaries):
-    longest_queue_names = []
+    longest_subscription_names = []
 
     for msg in bad_message_summaries:
-        longest_queue_names.append(max([len(queues) for queues in msg['affectedQueues']]))
+        longest_subscription_names.append(max([len(subscriptions) for subscriptions in msg['affectedSubscriptions']]))
 
-    max_queue_length = max(longest_queue_names)
+    max_subscription_length = max(longest_subscription_names)
 
     column_widths = {
         'messageHash': 4,
         'exceptionMessage': max(len(str(summary['exceptionMessage'])) for summary in bad_message_summaries),
         'firstSeen': max(len(str(summary['firstSeen'])) for summary in bad_message_summaries),
-        'queues': max_queue_length,
+        'subscriptions': max_subscription_length,
     }
 
     exception_header_min_length = len('Exception Message')
@@ -468,7 +468,7 @@ def get_msg_headers(column_widths):
     header = (f'        | {colored("Hash".ljust(column_widths["messageHash"]), color="cyan")} '
               f'| {colored("Exception Message".ljust(column_widths["exceptionMessage"]), color="cyan")} '
               f'| {colored("First Seen".ljust(column_widths["firstSeen"]), color="cyan")} '
-              f'| {colored("Queues".ljust(column_widths["queues"]), color="cyan")}')
+              f'| {colored("Subscriptions".ljust(column_widths["subscriptions"]), color="cyan")}')
     return header
 
 
