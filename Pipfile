@@ -13,7 +13,6 @@ requests = "*"
 google-cloud-pubsub = "*"
 google-cloud-storage = "*"
 tonyg-rfc3339 = "*"
-structlog = "*"
 
 [requires]
 python_version = "3.9"
