@@ -7,17 +7,12 @@ verify_ssl = true
 flake8 = "*"
 
 [packages]
-google-api-python-client = "*"
-oauth2client = "*"
-pika = "*"
+google-auth = "*"
 termcolor = "*"
 requests = "*"
 google-cloud-pubsub = "*"
 google-cloud-storage = "*"
-python-dateutil = "*"
 tonyg-rfc3339 = "*"
-retrying = "*"
-structlog = "*"
 
 [requires]
 python_version = "3.9"
