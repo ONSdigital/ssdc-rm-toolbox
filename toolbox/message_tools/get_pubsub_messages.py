@@ -55,7 +55,7 @@ def print_messages(response):
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Various Rabbit queue manipulation tools.')
+    parser = argparse.ArgumentParser(description='View and optionally ack messages from a PubSub subscription')
     parser.add_argument('source_subscription_name', help='source subscription name', type=str)
     parser.add_argument('source_subscription_project_ID', help='source subscription id', type=str)
     parser.add_argument('-s', '--search', help='message body search', type=str, default=None, nargs='?')

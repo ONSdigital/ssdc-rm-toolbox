@@ -12,13 +12,6 @@ RUN apt-get update && apt-get -yq install curl && apt-get -yq install jq && apt-
     cat /tmp/.bashrc_extras >> /home/toolbox/.bashrc && rm /tmp/.bashrc_extras
 WORKDIR /home/toolbox
 
-ENV RABBITMQ_SERVICE_HOST rabbitmq
-ENV RABBITMQ_SERVICE_PORT 5672
-ENV RABBITMQ_HTTP_PORT 15672
-ENV RABBITMQ_VHOST /
-ENV RABBITMQ_USER guest
-ENV RABBITMQ_PASSWORD guest
-
 COPY Pipfile* /home/toolbox/
 RUN pipenv install --system --deploy
 USER toolbox
