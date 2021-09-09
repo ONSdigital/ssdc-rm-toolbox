@@ -104,6 +104,22 @@ To upload a file to a bucket.
 uploadfiletobucket <file> <project> <bucket>
 ```
 
+## Dumping all the messages on a Pub/Sub subscription to files
+To dump all the messages queued up on a subscription
+
+### Usage
+```bash
+dumpsubscriptiontofiles <subscription> [--project <project>] [--destination <destination folder>]
+```
+
+## Dumping all the message files in a directory to a Pub/Sub topic
+To dump all the message files stored in a directory onto a topic
+
+### Usage
+```bash
+dumpfilestotopic <topic> [--project <project>] [--source <source folder>]
+```
+
 ## Running in Kubernetes
 To run the toolbox in a kubernetes environment, you'll have to create the deployment using the YAML files in ssdc-rm-kubernetes. If you do not have a Cloud SQL Read Replica, use the dev deployment YAML file
 
