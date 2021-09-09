@@ -4,8 +4,6 @@ import os
 
 from google.cloud import pubsub_v1
 
-CHUNK_SIZE = 1
-
 
 def dump_messages(project, topic, source):
     print("Publishing messages...", end="")
