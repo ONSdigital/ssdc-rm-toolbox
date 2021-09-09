@@ -166,7 +166,12 @@ def confirm_quarantine_bad_message(message_hash):
 
 
 def quarantine_bad_message(message_hash):
-    response = requests.get(f'{Config.EXCEPTIONMANAGER_URL}/skipmessage/{message_hash}')
+    skip_request = {
+        "messageHash": message_hash,
+        "skippingUser": Config.CURRENT_USER
+    }
+
+    response = requests.post(f'{Config.EXCEPTIONMANAGER_URL}/skipmessage', json=skip_request)
     response.raise_for_status()
 
 
