@@ -17,6 +17,7 @@ install:
 
 script:
   - make test
+  - make docker
 
 env:
   global:

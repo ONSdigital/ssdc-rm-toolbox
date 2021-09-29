@@ -11,6 +11,5 @@ def test_generated_sample_passes_validation(tmp_path):
     SampleGenerator(SCHEMA).generate_sample_file(20, generated_sample_path)
 
     # Then
-    validation_failures = SampleValidator().validate(
-        generated_sample_path)
+    validation_failures = SampleValidator().validate(generated_sample_path)
     assert not validation_failures, 'Should find no validation failures in generated sample'
