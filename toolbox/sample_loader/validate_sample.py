@@ -10,8 +10,8 @@ ValidationFailure = namedtuple('ValidationFailure', ('line_number', 'columnName'
 
 
 class SampleValidator:
-    def __init__(self):
-        self.schema = SCHEMA
+    def __init__(self, schema):
+        self.schema = schema
 
     def find_header_validation_failures(self, header):
         valid_header = set(column['columnName'] for column in self.schema)
@@ -90,7 +90,7 @@ def parse_arguments():
 
 def main():
     args = parse_arguments()
-    failures = SampleValidator().validate(args.sample_file_path)
+    failures = SampleValidator(SCHEMA).validate(args.sample_file_path)
     if failures:
         print_failures(failures)
         print(f'{args.sample_file_path} is not valid ❌')
