@@ -51,13 +51,13 @@ class SampleValidator:
                 return self.find_sample_validation_failures(sample_file_reader)
         except UnicodeDecodeError as err:
             return [
-                ValidationFailure(line_number=None, column=None,
+                ValidationFailure(line_number=None, columnName=None,
                                   description=f'Invalid file encoding, requires utf-8, error: {err}')]
 
 
 def build_failure_log(failure):
-    if failure.column:
-        return f'line: {failure.line_number}, column: {failure.column}, description: {failure.description}'
+    if failure.columnName:
+        return f'line: {failure.line_number}, columnName: {failure.columnName}, description: {failure.description}'
     if failure.line_number:
         return f'line: Header, description: {failure.description}'
     return failure.description
