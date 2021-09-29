@@ -105,38 +105,6 @@ def no_pipe_character():
     return validate
 
 
-def region_matches_treatment_code():
-    def validate(region, **kwargs):
-        if region.strip() and kwargs['row']['TREATMENT_CODE'].strip() and \
-                region[0] != kwargs['row']['TREATMENT_CODE'][-1]:
-            raise Invalid(
-                f'Region "{region}" does not match region in treatment code "{kwargs["row"]["TREATMENT_CODE"]}"')
-
-    return validate
-
-
-def ce_u_has_expected_capacity():
-    def validate(expected_capacity, **kwargs):
-        if kwargs['row']['ADDRESS_TYPE'] == 'CE' and kwargs['row']['ADDRESS_LEVEL'] == 'U' \
-                and (not expected_capacity.isdigit() or int(expected_capacity) == 0):
-            raise Invalid(
-                f'CE Unit Expected Capacity "{expected_capacity}" cannot be null, blank or zero')
-
-    return validate
-
-
-def ce_e_has_expected_capacity():
-    def validate(expected_capacity, **kwargs):
-        if kwargs['row']['ADDRESS_TYPE'] == 'CE' and kwargs['row']['ADDRESS_LEVEL'] == 'E' and (
-                kwargs['row']['TREATMENT_CODE'] not in {'CE_LDCEE', 'CE_LDCEW'}) and (
-                not expected_capacity.isdigit() or int(expected_capacity) == 0):
-            raise Invalid(
-                f'CE Estab Expected Capacity "{expected_capacity}" with Treatment Code '
-                f'{kwargs["row"]["TREATMENT_CODE"]} other than CE_LDCEE/CE_LDCEW cannot be null, blank or zero')
-
-    return validate
-
-
 def alphanumeric_postcode():
     def validate(postcode, **_kwargs):
         stripped_postcode = postcode.replace(" ", "")
