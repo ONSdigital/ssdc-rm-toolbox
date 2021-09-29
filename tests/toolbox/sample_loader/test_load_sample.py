@@ -1,5 +1,6 @@
 import json
 import uuid
+from datetime import datetime
 from unittest.mock import patch
 
 from toolbox.config import Config
@@ -40,12 +41,12 @@ def test_load_sample_publishes_new_case_events(patched_pubsub):
 
     published = patched_publish.call_args_list
     first_published_message = json.loads(published[0][0][1])
-    assert first_published_message.get('newCase').get('sample') == {"foo": "bar"}
-    assert first_published_message.get('newCase').get('sampleSensitive') == {"spam": "eggs"}
+    assert first_published_message['payload']['newCase'].get('sample') == {"foo": "bar"}
+    assert first_published_message['payload']['newCase'].get('sampleSensitive') == {"spam": "eggs"}
 
     second_published_message = json.loads(published[1][0][1])
-    assert second_published_message.get('newCase').get('sample') == {"foo": "hoo"}
-    assert second_published_message.get('newCase').get('sampleSensitive') == {"spam": "har"}
+    assert second_published_message['payload']['newCase'].get('sample') == {"foo": "hoo"}
+    assert second_published_message['payload']['newCase'].get('sampleSensitive') == {"spam": "har"}
 
     assert patched_publish_future.result.call_count == 2, 'Expected 2 calls to get result of publish future'
 
@@ -66,6 +67,8 @@ def test_create_new_case_event():
     header = new_case_event['header']
     assert header['version'] == Config.EVENT_SCHEMA_VERSION
     assert header.get('dateTime')
+    parsed_datetime = datetime.strptime(header['dateTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
+    assert parsed_datetime
     assert header.get('source')
     assert header.get('channel')
     assert header.get('messageId')
@@ -73,7 +76,7 @@ def test_create_new_case_event():
     assert header.get('originatingUser')
 
     # Check the body
-    new_case = new_case_event['newCase']
+    new_case = new_case_event['payload']['newCase']
     assert new_case['collectionExerciseId'] == str(collection_exercise_id)
     assert new_case.get('caseId')
     assert new_case['sample'] == {'foo': 'bar'}

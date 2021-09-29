@@ -1,71 +1,32 @@
-import shutil
 from pathlib import Path
-from unittest import TestCase
 
-from generate_sample_file import SampleGenerator
-from validate_sample import SampleValidator
+from toolbox.sample_loader.validate_sample import SampleValidator
+
+RESOURCE_FILE_PATH = Path(__file__).parents[2].joinpath('resources')
 
 
-class TestValidateSample(TestCase):
-    RESOURCE_FILE_PATH = Path(__file__).parent.joinpath('resources')
-    TMP_TEST_DIRECTORY_PATH = RESOURCE_FILE_PATH.joinpath('tmp')
+def test_validate_sample_success():
+    # Given
+    sample_validator = SampleValidator()
+    valid_sample_file_path = RESOURCE_FILE_PATH.joinpath('valid_generated_sample_20.csv')
 
-    def setUp(self) -> None:
-        shutil.rmtree(self.TMP_TEST_DIRECTORY_PATH, ignore_errors=True)
-        self.TMP_TEST_DIRECTORY_PATH.mkdir()
+    # When
+    validation_failures = sample_validator.validate(valid_sample_file_path)
 
-    def tearDown(self) -> None:
-        shutil.rmtree(self.TMP_TEST_DIRECTORY_PATH, ignore_errors=True)
+    # Then
+    assert not validation_failures, 'Should find no validation failures'
 
-    def test_validate_sample_success(self):
-        # Given
-        sample_validator = SampleValidator()
-        valid_sample_file_path = self.RESOURCE_FILE_PATH.joinpath('sample_file_1_per_treatment_code.csv')
 
-        # When
-        validation_failures = sample_validator.validate(valid_sample_file_path)
+def test_validate_sample_invalid():
+    # Given
+    sample_validator = SampleValidator()
+    invalid_sample_file_path = RESOURCE_FILE_PATH.joinpath('invalid_sample_missing_schoolId.csv')
 
-        # Then
-        self.assertEqual(validation_failures, [])
+    # When
+    validation_failures = sample_validator.validate(invalid_sample_file_path)
 
-    def test_validate_sample_invalid_treatment_code(self):
-        # Given
-        sample_validator = SampleValidator()
-        invalid_sample_file_path = self.RESOURCE_FILE_PATH.joinpath('sample_file_invalid_treatment_code.csv')
-
-        # When
-        validation_failures = sample_validator.validate(invalid_sample_file_path)
-
-        # Then
-        self.assertEqual(len(validation_failures), 1)
-        failure = validation_failures[0]
-        self.assertEqual(failure.line_number, 2)
-        self.assertEqual(failure.column, 'TREATMENT_CODE')
-
-    def test_generate_and_validate_random_uprns(self):
-        # Given
-        sample_validator = SampleValidator()
-        generated_sample_file_path = self.TMP_TEST_DIRECTORY_PATH.joinpath('generated_sample.csv')
-        treatment_code_quantities_path = self.RESOURCE_FILE_PATH.joinpath('treatment_code_quantities_1_per.csv')
-
-        # When
-        SampleGenerator().generate_sample_file(generated_sample_file_path, treatment_code_quantities_path,
-                                               sequential_uprn=False)
-        validation_failures = sample_validator.validate(generated_sample_file_path)
-
-        # Then
-        self.assertEqual(validation_failures, [])
-
-    def test_generate_and_validate_sequential_uprns(self):
-        # Given
-        sample_validator = SampleValidator()
-        generated_sample_file_path = self.TMP_TEST_DIRECTORY_PATH.joinpath('generated_sample.csv')
-        treatment_code_quantities_path = self.RESOURCE_FILE_PATH.joinpath('treatment_code_quantities_1_per.csv')
-
-        # When
-        SampleGenerator().generate_sample_file(generated_sample_file_path, treatment_code_quantities_path,
-                                               sequential_uprn=True)
-        validation_failures = sample_validator.validate(generated_sample_file_path)
-
-        # Then
-        self.assertEqual(validation_failures, [])
+    # Then
+    assert len(validation_failures) == 1
+    failure = validation_failures[0]
+    assert failure.line_number == 2
+    assert failure.columnName == 'schoolId'

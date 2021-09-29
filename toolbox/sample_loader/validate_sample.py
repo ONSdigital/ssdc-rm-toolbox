@@ -1,87 +1,33 @@
 import argparse
 import csv
 from collections import namedtuple
+from pathlib import Path
 
-from validators import max_length, Invalid, mandatory, numeric, in_set, latitude_longitude, set_equal, \
-    no_padding_whitespace, region_matches_treatment_code, ce_u_has_expected_capacity, \
-    ce_e_has_expected_capacity, alphanumeric_postcode, no_pipe_character, latitude_longitude_range, \
-    alphanumeric_plus_hyphen_field_values
+from toolbox.sample_loader.schema import SCHEMA
+from toolbox.sample_loader.validation_rules import Invalid, set_equal
 
-ValidationFailure = namedtuple('ValidationFailure', ('line_number', 'column', 'description'))
+ValidationFailure = namedtuple('ValidationFailure', ('line_number', 'columnName', 'description'))
 
 
 class SampleValidator:
-    TREATMENT_CODES = {
-        'HH_LP1E', 'HH_LP1W', 'HH_LP2E', 'HH_LP2W', 'HH_QP3E', 'HH_QP3W', 'HH_1ALSFN', 'HH_2BLEFN',
-        'HH_2CLEFN', 'HH_3DQSFN', 'HH_3EQSFN', 'HH_3FQSFN', 'HH_3GQSFN', 'HH_4HLPCVN', 'HH_SPGLNFN', 'HH_SPGQNFN',
-        'CE_LDIEE', 'CE_LDIEW', 'CE_LDIUE', 'CE_LDIUW', 'CE_QDIEE', 'CE_QDIEW', 'CE_LDCEE', 'CE_LDCEW',
-        'CE_1QNFN', 'CE_2LNFN', 'CE_3LSNFN', 'SPG_LPHUE', 'SPG_LPHUW', 'SPG_QDHUE', 'SPG_QDHUW', 'SPG_VDNEE',
-        'SPG_VDNEW'}
-
-    ESTAB_TYPES = {'HALL OF RESIDENCE', 'CARE HOME', 'HOSPITAL', 'HOSPICE', 'MENTAL HEALTH HOSPITAL',
-                   'MEDICAL CARE OTHER', 'BOARDING SCHOOL', 'LOW/MEDIUM SECURE MENTAL HEALTH',
-                   'HIGH SECURE MENTAL HEALTH', 'HOTEL', 'YOUTH HOSTEL', 'HOSTEL', 'MILITARY SLA', 'MILITARY US SLA',
-                   'RELIGIOUS COMMUNITY', 'RESIDENTIAL CHILDRENS HOME', 'EDUCATION OTHER', 'PRISON',
-                   'IMMIGRATION REMOVAL CENTRE', 'APPROVED PREMISES', 'ROUGH SLEEPER', 'STAFF ACCOMMODATION',
-                   'CAMPHILL', 'HOLIDAY PARK', 'HOUSEHOLD', 'SHELTERED ACCOMMODATION', 'RESIDENTIAL CARAVAN',
-                   'RESIDENTIAL BOAT', 'GATED APARTMENTS', 'MOD HOUSEHOLDS', 'FOREIGN OFFICES', 'CASTLES', 'GRT SITE',
-                   'MILITARY SFA', 'EMBASSY', 'ROYAL HOUSEHOLD', 'CARAVAN', 'MARINA', 'TRAVELLING PERSONS',
-                   'TRANSIENT PERSONS', 'MIGRANT WORKERS', 'MILITARY US SFA'}
-
     def __init__(self):
-        self.schema = {
-            'UPRN': [mandatory(), max_length(13), numeric(), no_padding_whitespace()],
-            'ESTAB_UPRN': [mandatory(), max_length(13), numeric(), no_padding_whitespace()],
-            'ADDRESS_TYPE': [mandatory(), in_set({'HH', 'CE', 'SPG'}), no_padding_whitespace()],
-            'ESTAB_TYPE': [mandatory(), in_set(self.ESTAB_TYPES)],
-            'ADDRESS_LEVEL': [mandatory(), in_set({'E', 'U'}), no_padding_whitespace()],
-            'ABP_CODE': [mandatory(), max_length(6), no_padding_whitespace(), no_pipe_character()],
-            'ORGANISATION_NAME': [max_length(60), no_padding_whitespace(), no_pipe_character()],
-            'ADDRESS_LINE1': [mandatory(), max_length(60), no_padding_whitespace(), no_pipe_character()],
-            'ADDRESS_LINE2': [max_length(60), no_padding_whitespace(), no_pipe_character()],
-            'ADDRESS_LINE3': [max_length(60), no_padding_whitespace(), no_pipe_character()],
-            'TOWN_NAME': [mandatory(), max_length(30), no_padding_whitespace(), no_pipe_character()],
-            'POSTCODE': [mandatory(), max_length(8), no_padding_whitespace(),
-                         alphanumeric_postcode(), no_pipe_character()],
-            'LATITUDE': [mandatory(), latitude_longitude(max_scale=7, max_precision=9),
-                         no_padding_whitespace(), no_pipe_character(), latitude_longitude_range()],
-            'LONGITUDE': [mandatory(), latitude_longitude(max_scale=7, max_precision=8),
-                          no_padding_whitespace(), no_pipe_character(), latitude_longitude_range()],
-            'OA': [mandatory(), max_length(9), no_padding_whitespace(), no_pipe_character()],
-            'LSOA': [mandatory(), max_length(9), no_padding_whitespace(), no_pipe_character()],
-            'MSOA': [mandatory(), max_length(9), no_padding_whitespace(), no_pipe_character()],
-            'LAD': [mandatory(), max_length(9), no_padding_whitespace(), no_pipe_character()],
-            'REGION': [mandatory(), max_length(9), no_padding_whitespace(),
-                       region_matches_treatment_code(), no_pipe_character()],
-            'HTC_WILLINGNESS': [mandatory(), in_set({'0', '1', '2', '3', '4', '5'})],
-            'HTC_DIGITAL': [mandatory(), in_set({'0', '1', '2', '3', '4', '5'})],
-            'FIELDCOORDINATOR_ID': [mandatory(), max_length(10), no_padding_whitespace(), no_pipe_character(),
-                                    alphanumeric_plus_hyphen_field_values()],
-            'FIELDOFFICER_ID': [mandatory(), max_length(13), no_padding_whitespace(), no_pipe_character(),
-                                alphanumeric_plus_hyphen_field_values()],
-            'TREATMENT_CODE': [mandatory(), in_set(self.TREATMENT_CODES)],
-            'CE_EXPECTED_CAPACITY': [numeric(), max_length(4), no_padding_whitespace(),
-                                     ce_u_has_expected_capacity(),
-                                     ce_e_has_expected_capacity()],
-            'CE_SECURE': [mandatory(), in_set({'0', '1'}), no_padding_whitespace()],
-            'PRINT_BATCH': [numeric(), max_length(2), no_padding_whitespace()]
-        }
+        self.schema = SCHEMA
 
     def find_header_validation_failures(self, header):
-        valid_header = set(self.schema.keys())
+        valid_header = set(column['columnName'] for column in self.schema)
         try:
             set_equal(valid_header)(header)
         except Invalid as invalid:
-            return ValidationFailure(line_number=1, column=None, description=str(invalid))
+            return ValidationFailure(line_number=1, columnName=None, description=str(invalid))
 
     def find_row_validation_failures(self, line_number, row):
         failures = []
-        for column, validators in self.schema.items():
-            for validator in validators:
+        for column in self.schema:
+            for rule in column["rules"]:
                 try:
-                    validator(row[column], row=row)
+                    rule(row[column['columnName']], row=row)
                 except Invalid as invalid:
-                    failures.append(ValidationFailure(line_number, column, invalid))
+                    failures.append(ValidationFailure(line_number, column['columnName'], invalid))
         return failures
 
     def find_sample_validation_failures(self, sample_file_reader) -> list:
@@ -110,11 +56,11 @@ class SampleValidator:
 
 
 def build_failure_log(failure):
-    return (f'line: {failure.line_number}, column: {failure.column}, description: {failure.description}'
-            if failure.column else
-            f'line: Header, description: {failure.description}'
-            if failure.line_number else
-            failure.description)
+    if failure.column:
+        return f'line: {failure.line_number}, column: {failure.column}, description: {failure.description}'
+    if failure.line_number:
+        return f'line: Header, description: {failure.description}'
+    return failure.description
 
 
 def print_failures_summary(failures, print_limit):
@@ -138,7 +84,7 @@ def print_failures(failures, print_limit=20):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Load a sample file into response management.')
-    parser.add_argument('sample_file_path', help='path to the sample file', type=str)
+    parser.add_argument('sample_file_path', help='path to the sample file', type=Path)
     return parser.parse_args()
 
 

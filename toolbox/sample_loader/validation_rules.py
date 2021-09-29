@@ -165,14 +165,3 @@ def latitude_longitude_range():
             raise Invalid(f'Latitude/Longitude value "{value}" is not in a range between -180 and 180')
 
     return validate
-
-
-VALIDATORS = {
-    "maxLength": max_length,
-    "unique": unique,
-    "mandatory": mandatory,
-    "numeric": numeric,
-    "noPaddingWhitespace": no_padding_whitespace,
-    "inSet": in_set,
-
-}

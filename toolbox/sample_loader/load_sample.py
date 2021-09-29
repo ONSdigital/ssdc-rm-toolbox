@@ -5,6 +5,7 @@ import logging
 import os
 import sys
 import uuid
+from datetime import datetime
 from typing import Iterable, Mapping
 
 from google.cloud import pubsub_v1
@@ -72,16 +73,18 @@ class SampleLoader:
                 'topic': Config.NEW_CASE_TOPIC,
                 'source': Config.SERVICE_NAME,
                 'channel': Config.EVENT_CHANNEL,
-                'dateTime': '2020-01-01T01:02:03Z',  # TODO
+                'dateTime': f'{datetime.utcnow().isoformat("T")}Z',  # RFC3339 format
                 'messageId': str(uuid.uuid4()),
                 'correlationId': str(uuid.uuid4()),
                 'originatingUser': Config.CURRENT_USER
             },
-            'newCase': {
-                'caseId': str(uuid.uuid4()),
-                'collectionExerciseId': str(self.collection_exercise_id),
-                'sample': sample_fields,
-                'sampleSensitive': sample_sensitive_fields
+            'payload': {
+                'newCase': {
+                    'caseId': str(uuid.uuid4()),
+                    'collectionExerciseId': str(self.collection_exercise_id),
+                    'sample': sample_fields,
+                    'sampleSensitive': sample_sensitive_fields
+                }
             }
         }
         return json.dumps(new_case_event).encode('utf-8')

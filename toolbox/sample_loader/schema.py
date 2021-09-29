@@ -1,47 +1,52 @@
-from toolbox.sample_loader.validation_rules import mandatory
+from toolbox.sample_loader.validation_rules import mandatory, no_padding_whitespace, numeric, in_set
 
 SCHEMA = (
     {
         "columnName": "schoolId",
-        "rules": [mandatory()]
+        "rules": [mandatory(), no_padding_whitespace()]
     },
     {
         "columnName": "schoolName",
-        "rules": [mandatory()]
+        "rules": [mandatory(), no_padding_whitespace()]
     },
     {
         "columnName": "childFirstName",
-        "rules": [mandatory()],
+        "rules": [mandatory(), no_padding_whitespace()],
         "sensitive": True
     },
     {
         "columnName": "childMiddleNames",
-        "rules": [],
+        "rules": [no_padding_whitespace()],
         "sensitive": True
     },
     {
         "columnName": "childLastName",
-        "rules": [mandatory()],
+        "rules": [mandatory(), no_padding_whitespace()],
         "sensitive": True
     },
     {
         "columnName": "childDob",
-        "rules": [],
-        "sensitive": True
-    },
-    {
-        "columnName": "yearGroup",
-        "rules": [],
+        "rules": [no_padding_whitespace()],
         "sensitive": True
     },
     {
         "columnName": "mobileNumber",
-        "rules": [mandatory()],
+        "rules": [mandatory(), numeric()],
         "sensitive": True
     },
     {
         "columnName": "emailAddress",
-        "rules": [],
+        "rules": [no_padding_whitespace()],
         "sensitive": True
     },
+    {
+        "columnName": "consentGivenTest",
+        "rules": [in_set({"true", "false"})],
+        "sensitive": True
+    },
+    {
+        "columnName": "consentGivenSurvey",
+        "rules": [in_set({"true", "false"})],
+        "sensitive": True
+    }
 )

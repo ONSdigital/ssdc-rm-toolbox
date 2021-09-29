@@ -6,7 +6,7 @@ class Config:
 
     EVENT_SCHEMA_VERSION = 'v0.3_RELEASE'
     EVENT_CHANNEL = os.getenv('EVENT_CHANNEL', 'RM')
-    SHARED_PROJECT_ID = os.getenv('SHARED_PROJECT_ID')
+    SHARED_PROJECT_ID = os.getenv('SHARED_PROJECT_ID', 'shared-project')
     NEW_CASE_TOPIC = os.getenv('NEW_CASE_TOPIC', 'event_new-case')
     EXCEPTIONMANAGER_HOST = os.getenv('EXCEPTIONMANAGER_HOST', 'localhost')
     EXCEPTIONMANAGER_PORT = os.getenv('EXCEPTIONMANAGER_PORT', '8666')
