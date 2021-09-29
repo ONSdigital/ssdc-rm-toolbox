@@ -6,6 +6,7 @@ import os
 import sys
 import uuid
 from datetime import datetime
+from pathlib import Path
 from typing import Iterable, Mapping
 
 from google.cloud import pubsub_v1
@@ -18,7 +19,7 @@ logger.addHandler(logging.NullHandler())
 
 
 class SampleLoader:
-    def __init__(self, schema, collection_exercise_id, sample_unit_log_frequency=5000, publish_timeout=60):
+    def __init__(self, schema, collection_exercise_id: uuid.UUID, sample_unit_log_frequency=5000, publish_timeout=60):
         self.schema = schema
         self.sample_keys = {column['columnName'] for column in self.schema if not column.get('sensitive')}
         self.sample_sensitive_keys = {column['columnName'] for column in self.schema if column.get('sensitive')}
@@ -26,7 +27,7 @@ class SampleLoader:
         self.sample_unit_log_frequency = sample_unit_log_frequency
         self.publish_timeout = publish_timeout
 
-    def load_sample_file(self, sample_file_path):
+    def load_sample_file(self, sample_file_path: Path):
         with open(sample_file_path) as sample_file:
             return self.load_sample(sample_file)
 
@@ -42,13 +43,13 @@ class SampleLoader:
 
         for count, sample_row in enumerate(sample_file_reader, 1):
 
-            future = publisher.publish(
-                topic_path,
-                self.create_new_case_event(sample_row)
-            )
-
-            # Block until finished publishing
             try:
+                future = publisher.publish(
+                    topic_path,
+                    self.create_new_case_event(sample_row)
+                )
+
+                # Block until finished publishing
                 future.result(timeout=self.publish_timeout)
             except Exception:
                 logger.error(
@@ -92,8 +93,8 @@ class SampleLoader:
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Load a sample file into response management.')
-    parser.add_argument('sample_file_path', help='path to the sample file', type=str)
-    parser.add_argument('collection_exercise_id', help='collection exercise ID', type=str)
+    parser.add_argument('sample_file_path', help='path to the sample file', type=Path)
+    parser.add_argument('collection_exercise_id', help='collection exercise ID', type=uuid.UUID)
     return parser.parse_args()
 
 
