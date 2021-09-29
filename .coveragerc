@@ -1,4 +1,3 @@
 [run]
 omit =
     tests/*
-    upload_file_to_bucket.py
