@@ -172,7 +172,7 @@ loadsample <file> <collection_exercise_id>
 Locally:
 
 ```shell
-pipenv run python -m toolbox.sample_loader.load_sample <file> <collection_exercise_id>
+PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run python -m toolbox.sample_loader.load_sample <file> <collection_exercise_id>
 ```
 
 ### Generating a sample
