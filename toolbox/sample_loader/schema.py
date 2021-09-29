@@ -1,7 +1,8 @@
 from functools import partial
 
 from toolbox.sample_loader.random_data_generators import random_characters, random_date, random_digits
-from toolbox.sample_loader.validation_rules import in_set, mandatory, max_length, no_padding_whitespace, numeric
+from toolbox.sample_loader.validation_rules import in_set, mandatory, max_length, no_padding_whitespace, numeric, \
+    uk_mobile_number_starting_07
 
 SCHEMA = (
     {
@@ -40,7 +41,7 @@ SCHEMA = (
     },
     {
         "columnName": "mobileNumber",
-        "rules": [mandatory(), numeric(), max_length(11)],
+        "rules": [mandatory(), uk_mobile_number_starting_07()],
         "sensitive": True,
         "generator": lambda: '07' + random_digits(9)
     },

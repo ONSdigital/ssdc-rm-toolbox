@@ -313,3 +313,38 @@ def test_alphanumeric_plus_hyphen_field_values_invalid():
     # When, then raises
     with pytest.raises(validation_rules.Invalid):
         alphanumeric_plus_hyphen_field_validator('TE-STT1-ES-!!')
+
+
+@pytest.mark.parametrize('value', [
+    '07123456789',
+    '07987654321',
+    '07234534256',
+])
+def test_uk_mobile_number_valid(value):
+    # Given
+    uk_mobile_number_starting_07_validator = validation_rules.uk_mobile_number_starting_07()
+
+    # When
+    uk_mobile_number_starting_07_validator(value)
+
+    # Then no Invalid exception is raised
+
+
+@pytest.mark.parametrize('value', [
+    'foo',
+    '7123456789',
+    '17123456789',
+    '77123456789',
+    '+447123456789',
+    '0447123456789',
+    'a7123456789',
+    'a07123456789',
+    '0712345678a',
+])
+def test_uk_mobile_number_invalid(value):
+    # Given
+    uk_mobile_number_starting_07_validator = validation_rules.uk_mobile_number_starting_07()
+
+    # When, then raises
+    with pytest.raises(validation_rules.Invalid):
+        uk_mobile_number_starting_07_validator(value)

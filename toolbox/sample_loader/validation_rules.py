@@ -133,3 +133,16 @@ def latitude_longitude_range():
             raise Invalid(f'Latitude/Longitude value "{value}" is not in a range between -180 and 180')
 
     return validate
+
+
+def uk_mobile_number_starting_07():
+    def validate(value, **_kwargs):
+        if value:
+            try:
+                int(value)
+            except ValueError:
+                raise Invalid(f'Value "{value}" is not a valid uk mobile number')
+            if len(value) != 11 or value[:2] != '07':
+                raise Invalid(f'Value "{value}" is not a valid uk mobile number')
+
+    return validate
