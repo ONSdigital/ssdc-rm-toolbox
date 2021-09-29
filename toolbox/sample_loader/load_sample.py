@@ -38,7 +38,7 @@ class SampleLoader:
     def _load_sample_units(self, sample_file_reader: Iterable[Mapping]):
 
         publisher = pubsub_v1.PublisherClient()
-        topic_path = publisher.topic_path(Config.SHARED_PROJECT_ID, Config.NEW_CASE_TOPIC)
+        topic_path = publisher.topic_path(Config.SHARED_PUBSUB_PROJECT, Config.NEW_CASE_TOPIC)
         logger.info(f'Publishing sample units to topic {Config.NEW_CASE_TOPIC}')
 
         for count, sample_row in enumerate(sample_file_reader, 1):
