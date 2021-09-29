@@ -16,6 +16,18 @@ SCHEMA = (
         "generator": partial(random_characters, min_length=4, max_length=100)
     },
     {
+        "columnName": "firstName",
+        "rules": [mandatory(), no_padding_whitespace(), max_length(60)],
+        "sensitive": True,
+        "generator": partial(random_characters, min_length=2, max_length=20)
+    },
+    {
+        "columnName": "lastName",
+        "rules": [mandatory(), no_padding_whitespace(), max_length(60)],
+        "sensitive": True,
+        "generator": partial(random_characters, min_length=2, max_length=20)
+    },
+    {
         "columnName": "childFirstName",
         "rules": [mandatory(), no_padding_whitespace(), max_length(60)],
         "sensitive": True,
