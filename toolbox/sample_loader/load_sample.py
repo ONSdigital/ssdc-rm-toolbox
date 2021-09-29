@@ -50,7 +50,7 @@ class SampleLoader:
             # Block until finished publishing
             try:
                 future.result(timeout=self.publish_timeout)
-            except:
+            except Exception:
                 logger.error(
                     f'Failed to publish new case message on row {count} on within timeout ({self.publish_timeout}s)')
                 raise
