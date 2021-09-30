@@ -7,7 +7,7 @@
       },
       {
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
-        "maxLength": 60
+        "maxLength": 11
       }
     ]
   },
@@ -19,7 +19,7 @@
       },
       {
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
-        "maxLength": 60
+        "maxLength": 100
       }
     ]
   },
