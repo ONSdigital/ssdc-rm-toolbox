@@ -160,7 +160,10 @@ pipenv run python -m toolbox.sample_loader.validate_sample <file>
 
 ### Loading a sample
 
-WARNING, this will post the messages into the RM system and is not trivial to roll back, ensure the sample is valid
+The survey and collection exercise must have been set up already. The survey validation rules in the database must match
+or be less strict than the python rules, otherwise the new case messages may fail to process.
+
+WARNING: this will post the messages into the RM system and is not trivial to roll back, ensure the sample is valid
 first.
 
 In kubernetes:
