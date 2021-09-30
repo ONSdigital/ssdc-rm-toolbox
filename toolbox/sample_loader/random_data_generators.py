@@ -19,12 +19,14 @@ def random_alphabetic(min_length: int, max_length: int):
 def random_characters(min_length: int, max_length: int):
     characters = ''.join(
         random.choice(
-            string.ascii_uppercase + string.ascii_lowercase + string.digits + ',.-\"\'()&!/:')
+            string.ascii_uppercase + string.ascii_lowercase + string.digits + ' ,.-\"\'()&!/:')
         for _ in range(random.randint(min_length, max_length)))
+
+    # Replace any leading or trailing whitespace
     if characters.lstrip() != characters:
         characters = random.choice(string.ascii_uppercase) + characters[1:]
     if characters.rstrip() != characters:
-        characters = characters[:-2] + random.choice(string.ascii_lowercase)
+        characters = characters[:-1] + random.choice(string.ascii_lowercase)
     return characters
 
 
