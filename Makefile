@@ -1,4 +1,4 @@
-build:
+install:
 	pipenv install --dev
 
 docker:
@@ -9,3 +9,8 @@ flake:
 
 check:
 	pipenv check
+
+unit-test:
+	pipenv run pytest --cov-report term-missing --cov . --capture no
+
+test: flake check unit-test

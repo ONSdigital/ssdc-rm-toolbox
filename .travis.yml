@@ -2,17 +2,25 @@ dist: xenial
 
 sudo: required
 
+services:
+  - docker
+
 language: python
 
 python:
   - "3.9"
+
+before_install:
+  - python -m pip install --upgrade pip
+  - python -m pip install --upgrade py
 
 install:
   - pip install pipenv
   - pipenv install --dev --deploy
 
 script:
-  - make flake
+  - make test
+  - make docker
 
 env:
   global:

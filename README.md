@@ -5,6 +5,7 @@ The most bestestest tools for make running the social survey big success wow.
 ## How to use - Find and remove messages on pubsub
 
 This tool will allow you to be able to find and delete messages on a pubsub topic
+
 ### Arguments
 
 | Name                      | Description                                                                                                         |                                                                                        
@@ -15,31 +16,34 @@ This tool will allow you to be able to find and delete messages on a pubsub topi
 | `DELETE`                  | Used with `message_id`, deletes pubsub message of the id supplied                                                   |
 | `message_id`              | Message id of the pubsub message                                                                                    |
 
-
-
 View messages on pubsub subscription:
+
    ```bash
    python -m toolbox.message_tools.get_pubsub_messages <subscription name> <subscription project id>
    ```
-   
+
 View messages on a pubsub subscription with bigger limit:
+
    ```bash
    python -m toolbox.message_tools.get_pubsub_messages <subscription name> <subscription project id> -l <limit>
    ```
-   
+
 Search for a message:
+
    ```bash
    python -m toolbox.message_tools.get_pubsub_messages <subscription name> <subscription project id> -s <search term>
    ```
 
-Delete message on pubsub subscription:   
+Delete message on pubsub subscription:
+
    ```bash
    python -m toolbox.message_tools.get_pubsub_messages <subscription name> <subscription project id> <message_id> DELETE
    ```
-   
-   
+
 ## How to use - Moving messages from pubsub to bucket
+
 Move messages from pubsub to a GCS bucket
+
 ### Arguments
 
 | Name                      | Description                                                                                                         |                                                                                        
@@ -49,15 +53,16 @@ Move messages from pubsub to a GCS bucket
 | `bucket name`             | Bucket you want to move the pubsub message to                                                                       |                                                  
 | `message_id`              | Message id of the pubsub message you want to move                                                                   |
 
-
-
 Moving a pubsub message to a bucket:
+
 ```bash
 python -m toolbox.message_tools.put_message_on_bucket <subscription name> <subscription project id> <bucket name> <message_id>
 ```
+
 ## How to use - publishing message from GCS bucket to pubsub topic
 
 Publishing message from GCS bucket to pubsub topic
+
 ### Arguments
 
 | Name                      | Description                                                                                                         |                                                                                        
@@ -68,62 +73,126 @@ Publishing message from GCS bucket to pubsub topic
 | `bucket blob name`        | Name of the blob you want to publish to a topic                                                                     |                                                  
 
 Publishing message from GCS bucket to pubsub topic:
+
 ```bash
 python -m toolbox.message_tools.publish_message_from_bucket <topic name> <project id> <bucket blob name> <bucket name>
 ```
 
 ## QID Checksum Validator
-A tool to check if a QID checksum is valid. Also shows the valid checksum digits if the QID fails. 
+
+A tool to check if a QID checksum is valid. Also shows the valid checksum digits if the QID fails.
 
 ### Usage
+
 ```bash
 qidcheck <QID>
 ```
 
 ### Arguments
+
 | Name                      | Description                                                                                                         |                                                                                        
 | ---------------------     | ------------------------------------------------------------------------------------------------------------------- |
 | `qid`                     | The QID you wish to validate                                                                                        |
 
 #### Optional Arguments
-A non-default modulus and or factor for the checksum algorithm can be used with the optional flags `--modulus` and `--factor` 
-   
+
+A non-default modulus and or factor for the checksum algorithm can be used with the optional flags `--modulus`
+and `--factor`
+
 ## SFTP Support Login
-To connect to SFTP (i.e. GoAnywhere) to check print files (read only). 
+
+To connect to SFTP (i.e. GoAnywhere) to check print files (read only).
 
 ### Usage
+
 ```bash
 doftp
 ```
 
 ## Uploading a file to a bucket
+
 To upload a file to a bucket.
 
 ### Usage
+
 ```bash
 uploadfiletobucket <file> <project> <bucket>
 ```
 
 ## Dumping all the messages on a Pub/Sub subscription to files
+
 To dump all the messages queued up on a subscription
 
 ### Usage
+
 ```bash
 dumpsubscriptiontofiles <subscription> [--project <project>] [--destination <destination folder>]
 ```
 
 ## Dumping all the message files in a directory to a Pub/Sub topic
+
 To dump all the message files stored in a directory onto a topic
 
 ### Usage
+
 ```bash
 dumpfilestotopic <topic> [--project <project>] [--source <source folder>]
 ```
 
+## Sample Loader
+
+The sample loader modules has tools to validate and load SIS2 spec samples. The schema is hardcoded. It also includes a
+tool to generate a random sample for testing.
+
+### Validating a sample
+
+In kubernetes:
+
+```shell
+validatesample <file>
+```
+
+Locally:
+
+```shell
+pipenv run python -m toolbox.sample_loader.validate_sample <file>
+```
+
+### Loading a sample
+
+The survey and collection exercise must have been set up already. The survey validation rules in the database must match
+or be less strict than the python rules, otherwise the new case messages may fail to process.
+
+WARNING: this will post the messages into the RM system and is not trivial to roll back, ensure the sample is valid
+first.
+
+In kubernetes:
+
+```shell
+loadsample <file> <collection_exercise_id>
+```
+
+Locally:
+
+```shell
+PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run python -m toolbox.sample_loader.load_sample <file> <collection_exercise_id>
+```
+
+### Generating a sample
+
+Locally:
+
+```shell
+pipenv run python -m toolbox.sample_loader.generate_sample <sample_size> <destination_path>
+```
+
 ## Running in Kubernetes
-To run the toolbox in a kubernetes environment, you'll have to create the deployment using the YAML files in ssdc-rm-kubernetes. If you do not have a Cloud SQL Read Replica, use the dev deployment YAML file
+
+To run the toolbox in a kubernetes environment, you'll have to create the deployment using the YAML files in
+ssdc-rm-kubernetes. If you do not have a Cloud SQL Read Replica, use the dev deployment YAML file
 
 Once the pod is up, you can connect to it:
+
 ```bash
 kubectl exec -it $(kubectl get pods --selector=app=ssdc-rm-toolbox -o jsonpath='{.items[*].metadata.name}') -- /bin/bash
 ```
