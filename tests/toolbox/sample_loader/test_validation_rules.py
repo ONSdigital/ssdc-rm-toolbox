@@ -348,3 +348,41 @@ def test_uk_mobile_number_invalid(value):
     # When, then raises
     with pytest.raises(validation_rules.Invalid):
         uk_mobile_number_starting_07_validator(value)
+
+
+def test_iso_date_valid():
+    # Given
+    iso_date_validator = validation_rules.iso_date()
+
+    # When
+    iso_date_validator('2021-10-11')
+
+    # Then no invalid exception raised
+
+
+def test_iso_date_invalid():
+    # Given
+    iso_date_validator = validation_rules.iso_date()
+
+    # When, then raises
+    with pytest.raises(validation_rules.Invalid):
+        iso_date_validator('66-666-6666')
+
+
+def test_iso_datetime_valid():
+    # Given
+    iso_datetime_validator = validation_rules.iso_datetime()
+
+    # When
+    iso_datetime_validator('2021-10-11T12:00:00Z')
+
+    # Then no invalid exception raised
+
+
+def test_iso_datetime_invalid():
+    # Given
+    iso_datetime_validator = validation_rules.iso_datetime()
+
+    # When, then raises
+    with pytest.raises(validation_rules.Invalid):
+        iso_datetime_validator('66-666-6666T66:66:66Z')
