@@ -2,7 +2,7 @@ from functools import partial
 
 from toolbox.sample_loader.random_data_generators import random_characters, random_date, random_digits
 from toolbox.sample_loader.validation_rules import in_set, mandatory, max_length, no_padding_whitespace, numeric, \
-    uk_mobile_number_starting_07
+    uk_mobile_number_starting_07, iso_date
 
 SCHEMA = (
     {
@@ -47,7 +47,7 @@ SCHEMA = (
     },
     {
         "columnName": "childDob",
-        "rules": [mandatory(), no_padding_whitespace()],
+        "rules": [mandatory(), no_padding_whitespace(), iso_date()],
         "sensitive": True,
         "generator": random_date
     },
