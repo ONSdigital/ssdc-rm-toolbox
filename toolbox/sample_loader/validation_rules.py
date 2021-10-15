@@ -1,3 +1,5 @@
+import datetime
+from datetime import date
 from typing import Iterable
 
 
@@ -144,5 +146,27 @@ def uk_mobile_number_starting_07():
                 raise Invalid(f'Value "{value}" is not a valid uk mobile number')
             if len(value) != 11 or value[:2] != '07':
                 raise Invalid(f'Value "{value}" is not a valid uk mobile number')
+
+    return validate
+
+
+def iso_date():
+    def validate(value, **_kwargs):
+        if value:
+            try:
+                date.fromisoformat(value)
+            except ValueError:
+                raise Invalid(f'Value "{value}" is not a valid ISO date')
+
+    return validate
+
+
+def iso_datetime():
+    def validate(value, **_kwargs):
+        if value:
+            try:
+                datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+            except ValueError:
+                raise Invalid(f'Value "{value}" is a not a valid ISO datetime')
 
     return validate
