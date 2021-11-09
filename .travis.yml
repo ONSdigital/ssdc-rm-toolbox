@@ -19,7 +19,7 @@ install:
   - pipenv install --dev --deploy
 
 script:
-  - make test
+  - make flake
   - make docker
 
 env:

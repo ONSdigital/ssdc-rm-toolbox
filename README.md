@@ -138,3 +138,14 @@ To dump all the message files stored in a directory onto a topic
 ```bash
 dumpfilestotopic <topic> [--project <project>] [--source <source folder>]
 ```
+
+## Running in Kubernetes
+
+To run the toolbox in a kubernetes environment, you'll have to create the deployment using the YAML files in
+ssdc-rm-kubernetes. If you do not have a Cloud SQL Read Replica, use the dev deployment YAML file
+
+Once the pod is up, you can connect to it:
+
+```bash
+kubectl exec -it $(kubectl get pods --selector=app=ssdc-rm-toolbox -o jsonpath='{.items[*].metadata.name}') -- /bin/bash
+```
