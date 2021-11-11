@@ -12,5 +12,3 @@ alias qidcheck='python -m toolbox.qid_checksum_validator --modulus $QID_MODULUS 
 alias doftp='sftp -i $SFTP_KEY_FILENAME $SFTP_USERNAME@$SFTP_HOST'
 alias dumpsubscriptiontofiles='python -m toolbox.message_tools.dump_subscription_to_files'
 alias dumpfilestotopic='python -m toolbox.message_tools.dump_files_to_topic'
-alias validatesample='python -m toolbox.sample_loader.validate_sample'
-alias loadsample='python -m toolbox.sample_loader.load_sample'

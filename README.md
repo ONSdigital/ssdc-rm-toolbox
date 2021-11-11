@@ -139,53 +139,6 @@ To dump all the message files stored in a directory onto a topic
 dumpfilestotopic <topic> [--project <project>] [--source <source folder>]
 ```
 
-## Sample Loader
-
-The sample loader modules has tools to validate and load SIS2 spec samples. The schema is hardcoded. It also includes a
-tool to generate a random sample for testing.
-
-### Validating a sample
-
-In kubernetes:
-
-```shell
-validatesample <file>
-```
-
-Locally:
-
-```shell
-pipenv run python -m toolbox.sample_loader.validate_sample <file>
-```
-
-### Loading a sample
-
-The survey and collection exercise must have been set up already. The survey validation rules in the database must match
-or be less strict than the python rules, otherwise the new case messages may fail to process.
-
-WARNING: this will post the messages into the RM system and is not trivial to roll back, ensure the sample is valid
-first.
-
-In kubernetes:
-
-```shell
-loadsample <file> <collection_exercise_id>
-```
-
-Locally:
-
-```shell
-PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run python -m toolbox.sample_loader.load_sample <file> <collection_exercise_id>
-```
-
-### Generating a sample
-
-Locally:
-
-```shell
-pipenv run python -m toolbox.sample_loader.generate_sample <sample_size> <destination_path>
-```
-
 ## Running in Kubernetes
 
 To run the toolbox in a kubernetes environment, you'll have to create the deployment using the YAML files in
