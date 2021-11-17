@@ -13,6 +13,7 @@ python:
 before_install:
   - python -m pip install --upgrade pip
   - python -m pip install --upgrade py
+  - docker login -u "${DOCKERHUB_USERNAME}" -p "${DOCKERHUB_PASSWORD}";
 
 install:
   - pip install pipenv
