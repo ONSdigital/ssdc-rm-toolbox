@@ -2,7 +2,7 @@ install:
 	pipenv install --dev
 
 docker:
-	docker build -t eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-toolbox .
+	docker build -t europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-toolbox .
 
 flake:
 	pipenv run flake8
